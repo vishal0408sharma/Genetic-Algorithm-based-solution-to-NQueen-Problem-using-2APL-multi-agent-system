@@ -1,0 +1,4 @@
+<apaplmas>
+	<environment name="env" file="env.jar"/>
+	<agent name="Agent1" file="agent.2apl"/>
+</apaplmas>

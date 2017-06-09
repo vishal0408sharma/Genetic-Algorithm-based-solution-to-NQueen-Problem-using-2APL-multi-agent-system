@@ -1,0 +1,67 @@
+beliefs:
+	iterations(1).
+	
+goals:
+	solution(found).
+	iterations(0).
+	
+beliefupdates: 
+	{true} Finish() {solution(found)}
+	{true} SearchOver() {iterations(0)}
+	
+plans:  
+	print('perceiving current board configuration');
+	@env(perceive(),Board);
+	print('current board configuration is ');
+	print(Board);
+	
+	@env(getFitness(),X);
+	
+	print('fitness='+X);
+	
+	if(X=0){
+		finishGame();
+		
+	} else {
+		print('Value of X is not zero');
+		iterate();
+	}
+	
+pcrules: 
+	finishGame() <- true | {
+		print('Solution Found');
+		Finish();
+	}
+	
+	over() <- true | {
+		print('No Solution Found');
+		SearchOver();
+	}
+	
+	iterate() <- true | {
+		@env(run(),_);
+		print('ran');
+		@env(perceive(),Board);
+		@env(getFitness(),X);
+		print('Executing execute, perceive and getFitness external action');
+		print('X='+X);
+		
+		print('Board=');
+		print(Board);
+		
+		if(X=0){
+			finishGame();
+		} else {
+			print('Value of X is not zero');
+			
+			@env(iterationsRemaining(),Y);
+			print('Y='+Y);
+			
+			if(Y=0){
+				over();
+			} else {
+				print('iterating again');
+				iterate();
+			}
+		}
+	}
